@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { Heart, Lock } from 'lucide-react';
 import { getProfileNamePublic, verifyAndUnlock } from '@/utils/storage';
 
@@ -11,6 +11,17 @@ const LockScreen = ({ onUnlock }: LockScreenProps) => {
   const [error, setError] = useState(false);
   const [unlocking, setUnlocking] = useState(false);
   const name = getProfileNamePublic('');
+
+  const floatingHearts = useMemo(
+    () =>
+      Array.from({ length: 20 }, () => ({
+        left: Math.random() * 100,
+        size: 14 + Math.random() * 24,
+        duration: 7 + Math.random() * 8,
+        delay: Math.random() * 10,
+      })),
+    [],
+  );
 
   const handleDigit = (digit: string) => {
     if (code.length >= 4) return;
@@ -43,20 +54,24 @@ const LockScreen = ({ onUnlock }: LockScreenProps) => {
   return (
     <div className="fixed inset-0 z-50 flex flex-col items-center justify-center romantic-gradient overflow-hidden">
       {/* Floating hearts */}
-      {Array.from({ length: 20 }, (_, i) => (
+      {floatingHearts.map((h, i) => (
         <span
           key={i}
           className="absolute text-primary-foreground/20 pointer-events-none"
           style={{
-            left: `${Math.random() * 100}%`,
-            fontSize: `${14 + Math.random() * 24}px`,
-            animation: `float-heart ${7 + Math.random() * 8}s ease-in-out ${Math.random() * 10}s infinite`,
+            left: `${h.left}%`,
+            fontSize: `${h.size}px`,
+            animation: `float-heart ${h.duration}s ease-in-out ${h.delay}s infinite`,
           }}
         >
           ❤
         </span>
       ))}
-      <div className={`flex flex-col items-center transition-all duration-700 relative z-10 ${unlocking ? 'scale-150 opacity-0' : 'scale-100 opacity-100'}`}>
+      <div
+        className={`flex flex-col items-center transition-all duration-700 ease-in-out relative z-10 will-change-transform ${
+          unlocking ? 'scale-150 opacity-0' : 'scale-100 opacity-100'
+        }`}
+      >
         <Heart
           className={`mb-4 text-primary-foreground ${unlocking ? 'animate-pulse-heart' : ''}`}
           size={56}

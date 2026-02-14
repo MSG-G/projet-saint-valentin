@@ -495,7 +495,18 @@ export async function deletePhoto(id: string): Promise<void> {
 
 // ---- Relationship date ----
 export function getRelationshipDate(): string {
-  return getLocal<string>('love_start_date', '2024-02-14');
+  const stored = localStorage.getItem('love_start_date');
+  if (!stored) return '2025-10-12';
+  try {
+    const parsed = JSON.parse(stored) as string;
+    if (parsed === '2024-02-14') {
+      setLocal('love_start_date', '2025-10-12');
+      return '2025-10-12';
+    }
+    return parsed;
+  } catch {
+    return '2025-10-12';
+  }
 }
 
 export function setRelationshipDate(date: string): void {
