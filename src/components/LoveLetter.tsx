@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { PenLine, Edit3, Save } from 'lucide-react';
 import { getLetter, saveLetter } from '@/utils/storage';
 
-const DEFAULT_LETTER = `Mon amour Absatou Dabo,
+const DEFAULT_LETTER = `Mon amour,
 
 Si tu lis ces mots, c'est que je voulais que tu saches à quel point tu comptes pour moi.
 
